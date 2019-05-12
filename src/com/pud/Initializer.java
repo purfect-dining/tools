@@ -205,6 +205,7 @@ public class Initializer {
                 List<Comment> ct = new ArrayList<>();
                 ct.add(comment);
                 Backendless.Data.of(DiningTiming.class).addRelation(diningTiming, "comments", ct);
+                Backendless.Data.of(BackendlessUser.class).addRelation(backendlessUser, "comments", ct);
 
                 List<DiningTiming> dt = new ArrayList<>();
                 dt.add(diningTiming);
@@ -215,13 +216,15 @@ public class Initializer {
 
     public void addRatings(int count) {
         System.out.println("Adding ratings...\n");
-        List<DiningTiming> diningTimings = Backendless.Data.of(DiningTiming.class).find();
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setPageSize(100);
+        List<DiningTiming> diningTimings = Backendless.Data.of(DiningTiming.class).find(queryBuilder);
         Random random = new Random();
 
         for (DiningTiming diningTiming : diningTimings) {
             for (int i = 0; i < count; i++) {
                 Rating rating = new Rating();
-                rating.setRating(random.nextInt(9));
+                rating.setRating(random.nextInt(3) + 1);
                 rating = Backendless.Data.save(rating);
 
                 List<DiningTiming> dt = new ArrayList<>();
